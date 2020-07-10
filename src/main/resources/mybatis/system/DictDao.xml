@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dosion.model.system.mapper.DictDao">
+
+	<resultMap type="com.dosion.model.system.entity.Dict" id="Entity">
+		<id property="id" column="id" />
+		<result property="value" column="value" />
+		<result property="label" column="label" />
+		<result property="type" column="type" />
+		<result property="description" column="description" />
+		<result property="sort" column="sort" />
+		<result property="pid" column="pid" />		
+		<result property="createBy.id" column="createBy.id" />
+		<result property="createDate" column="createDate" />
+		<result property="updateBy.id" column="updateBy.id" />
+		<result property="updateDate" column="updateDate" />
+		<result property="remarks" column="remarks" />
+		<result property="delFlag" column="delFlag" />
+	</resultMap>
+	
+	<sql id="Columns">
+    	a.id,
+    	a.value,    	
+    	a.label,
+    	a.type,
+    	a.description,
+    	a.sort,
+		a.pid,
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks,
+		a.del_flag AS "delFlag"
+    </sql>
+    
+    <sql id="Joins">
+    
+    </sql>
+    
+    <sql id="TableName">
+    	FROM sys_dict AS a
+    </sql>
+
+    <!-- 根据id获得对象 -->
+	<select id="get" resultMap="Entity">
+		SELECT
+			<include refid="Columns"/>
+			<include refid="TableName"/>
+			<include refid="Joins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!-- 按条件查询所有 -->
+	<select id="findAll" resultMap="Entity">
+		SELECT 
+		<include refid="Columns"/>
+		<include refid="TableName"/>
+		<include refid="Joins"/>
+		<include refid="searchCondition"/>
+		ORDER BY a.sort ASC 
+	</select>
+	<!-- /按条件查询所有 -->
+	
+	<!-- 分页查询 -->
+	<select id="findByPage" resultMap="Entity">
+		SELECT 
+		<include refid="Columns"/>
+		<include refid="TableName"/>
+		<include refid="Joins"/>
+		<include refid="searchCondition"/>
+		ORDER BY a.type ASC,a.sort ASC 
+	</select>
+	
+	<!-- 查询个数 -->
+	<select id="findCount" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		<include refid="TableName"/>
+		<include refid="searchCondition"/>
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="searchCondition">
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="typeList != null ">
+			  <if test="typeList.size > 0">
+          AND a.type IN
+          <foreach collection="typeList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </if>
+			</if>
+			<if test="type !=null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+	</sql>
+	
+    <!-- 插入数据 -->
+    <insert id="insert">
+    INSERT INTO sys_dict (
+    	`value`,
+    	label,
+    	`type`,
+    	description,
+    	sort,
+    	pid,
+    	create_by,
+		update_by,
+		remarks,
+		del_flag
+	) VALUES (
+		#{value},
+	    #{label},
+	    #{type},
+	    #{description},
+	    #{sort},
+	    #{pid},
+	    #{createBy.id},
+	    #{updateBy.id},
+	    #{remarks},
+	    #{DEL_FLAG_NORMAL})
+    </insert>
+    <!-- /插入数据 -->
+    
+    <!-- 更新数据 -->
+    <update id="update">
+    	UPDATE sys_dict 
+    	 <set>
+		      <if test="value != null and value != ''" >
+		        value = #{value,jdbcType=VARCHAR},
+		      </if>
+		      <if test="label != null and label != ''" >
+		        label = #{label,jdbcType=VARCHAR},
+		      </if>
+		      <if test="type != null and type != ''" >
+		        type = #{type,jdbcType=VARCHAR},
+		      </if>
+		      <if test="description != null and description != ''" >
+		        description = #{description,jdbcType=VARCHAR},
+		      </if>
+		      <if test="sort != null" >
+		        sort = #{sort,jdbcType=INTEGER},
+		      </if>
+		      <if test="pid != null" >
+		        pid = #{pid,jdbcType=INTEGER},
+		      </if>
+		      <if test="updateBy != null and updateBy.id != null" >
+		        update_by = #{updateBy.id,jdbcType=VARCHAR},
+		      </if>
+		      <if test="updateDate != null" >
+		        update_date = #{updateDate,jdbcType=TIMESTAMP},
+		      </if>
+		      <if test="remarks != null" >
+		        remarks = #{remarks,jdbcType=VARCHAR},
+		      </if>
+		    </set>
+		WHERE id = #{id}
+    </update>
+    <!-- /更新数据 -->
+    
+    <!-- 删除 -->
+	<update id="delete">
+		UPDATE sys_dict 
+		<set>
+			del_flag= #{DEL_FLAG_DELETE}
+		</set>
+		<where>
+			id =#{id}
+		</where>
+	</update>
+
+  <!-- 按条件查询所有 -->
+  <select id="getDict" resultMap="Entity">
+    SELECT
+    <include refid="Columns"/>
+    <include refid="TableName"/>
+    <include refid="Joins"/>
+     WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.type = #{type}
+    ORDER BY a.sort ASC
+  </select>
+</mapper>

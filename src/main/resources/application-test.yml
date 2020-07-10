@@ -1,0 +1,83 @@
+server:
+  port: 8099
+  tomcat:
+    uri-encoding: UTF-8
+#接口前缀
+controller:
+  prefix: pension-iot
+  system:
+    prefix: system
+app:
+  url: www.pension-iot.com
+  name: 物联网平台
+  #mybatis配置
+  #mybatis:
+  # mapper-locations: classpath:mybatis/*/*.xml
+
+mybatis-plus:
+  mapper-locations: classpath:/mybatis/iot/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      field-strategy: NOT_EMPTY
+  type-handlers-package:  com.dosion.handler
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  #数据库连接池配置
+spring:
+  servlet:
+    multipart:
+    maxFileSize: 100Mb
+    maxRequestSize: 100Mb
+  datasource:
+    url: jdbc:mysql://jingle-cat-mysql:3306/jingle-cat?useUnicode=true&characterEncoding=utf8&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8
+    dbname: root
+    password: dosion123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 20
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    spring.datasource.filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  upload:
+    path: \E:\Dosion\internet\internet-phone\target\internet-phone-1.0.0-SNAPSHOT
+
+  redis:
+    host: 114.116.98.55
+    port: 30023
+    password:
+
+multipart:
+  maxRequestSize: 200MB
+  maxFileSize: 200MB
+
+
+swagger:
+  title: cloud-worker Swagger API
+  license: Powered By cloud-worker
+  licenseUrl: https://dosion.com/
+  terms-of-service-url: https://dosion.com/
+  contact:
+    email: wangiegie@gmail.com
+    url: https://dosion.com/about.html
+  authorization:
+    name: dcloudx OAuth
+    auth-regex: ^.*$
+    authorization-scope-list:
+      - scope: server
+        description: server all
+    token-url-list:
+      - http://${GATEWAY-HOST:cloud-worker-gateway}:${GATEWAY-PORT:9999}/auth/oauth/token
+

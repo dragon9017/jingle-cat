@@ -1,0 +1,85 @@
+server:
+  port: 8099
+  tomcat:
+    uri-encoding: UTF-8
+#接口前缀
+controller:
+  prefix: jingle-cat
+  system:
+    prefix: system
+app:
+  url: www.jingle-cat.com
+  name: 叮当猫系统
+
+swagger:
+  title: 叮当猫 Swagger API
+  license: Powered By 叮当猫
+  licenseUrl: https://dosion.com/
+  terms-of-service-url: https://dosion.com/
+  contact:
+    email: dingdangmao@gmail.com
+    url: https://dosion.com/about.html
+
+mybatis-plus:
+  mapper-locations: classpath*:/mybatis/cat/*Mapper.xml,classpath*:/mybatis/system/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      field-strategy: NOT_EMPTY
+  type-handlers-package:  com.dosion.handler
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  #数据库连接池配置
+spring:
+  servlet:
+    multipart:
+    maxFileSize: 100Mb
+    maxRequestSize: 100Mb
+  datasource:
+    url: jdbc:mysql://jingle-cat-mysql:3306/jingle-cat?useUnicode=true&characterEncoding=utf8&useSSL=false&useTimezone=true&serverTimezone=GMT%2B8
+    dbname: root
+    password: dosion123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 20
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    spring.datasource.filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+  #redis
+  redis:
+    host: jingle-cat-redis
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 5000
+
+multipart:
+  maxRequestSize: 200MB
+  maxFileSize: 200MB
+
+#文件系统
+minio:
+  url: http://114.116.111.197:8081
+  access-key: dosion
+  secret-key: dosion123456

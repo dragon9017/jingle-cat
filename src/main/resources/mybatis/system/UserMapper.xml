@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dosion.model.system.mapper.UserMapper">
+    <resultMap type="com.dosion.model.system.entity.User" id="Entity">
+        <id property="id" column="id"/>
+        <result property="loginName" column="loginName"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="mobile" column="mobile"/>
+        <result property="file.id" column="file.id"/>
+        <result property="file.url" column="file.url"/>
+        <result property="file.name" column="file.name"/>
+        <result property="loginIp" column="loginIp"/>
+        <result property="loginDate" column="loginDate"/>
+        <result property="loginFlag" column="loginFlag"/>
+        <result property="createBy.id" column="createBy.id"/>
+        <result property="createDate" column="createDate"/>
+        <result property="updateBy.id" column="updateBy.id"/>
+        <result property="updateDate" column="updateDate"/>
+        <result property="nickname" column="nickname"/>
+        <result property="inviteCode" column="invite_code"/>
+        <result property="pidCode" column="pid_code"/>
+        <result property="integral" column="integral"/>
+        <result property="withdrawal" column="withdrawal"/>
+        <result property="rules" column="rules"/>
+        <result property="pcApp" column="pc_app"/>
+        <result property="roleId" column="role_id"/>
+        <result property="phone" column="phone"/>
+        <result property="goldPrice" column="gold_price"/>
+        <result property="avatar" column="avatar"/>
+        <result property="aliPay" column="aliPay"/>
+        <result property="levelId" column="levelId"/>
+        <result property="commission" column="commission"/>
+    </resultMap>
+</mapper>

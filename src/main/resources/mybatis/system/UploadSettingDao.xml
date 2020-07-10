@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dosion.model.system.mapper.UploadSettingMapper">
+    <resultMap id="BaseResultMap" type="com.dosion.model.system.entity.UploadSetting">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <!--<result column="site.id" property="site.id"/>-->
+        <result column="fileType" property="fileType" jdbcType="VARCHAR"/>
+        <result column="videoType" property="videoType" jdbcType="VARCHAR"/>
+        <result column="fileSize" property="fileSize" jdbcType="INTEGER"/>
+        <result column="videoSize" property="videoSize" jdbcType="INTEGER"/>
+        <result column="imgSize" property="imgSize" jdbcType="INTEGER"/>
+        <result column="imgAreaX" property="imgAreaX" jdbcType="INTEGER"/>
+        <result column="imgAreaY" property="imgAreaY" jdbcType="INTEGER"/>
+        <result column="thumbnailX" property="thumbnailX" jdbcType="INTEGER"/>
+        <result column="thumbnailY" property="thumbnailY" jdbcType="INTEGER"/>
+        <result column="watermarkType" property="watermarkType" jdbcType="INTEGER"/>
+        <result column="watermarkPosition" property="watermarkPosition" jdbcType="INTEGER"/>
+        <result column="watermarkFile" property="watermarkFile" jdbcType="VARCHAR"/>
+        <result column="watermarkTransparent" property="watermarkTransparent" jdbcType="INTEGER"/>
+        <result column="watermarkText" property="watermarkText" jdbcType="VARCHAR"/>
+        <result column="watermarkTextSize" property="watermarkTextSize" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="TableName">
+        FROM  sys_upload_setting AS a
+    </sql>
+
+    <sql id="Base_Column_List">
+        a.id,
+        a.file_type as "fileType",
+        a.video_type as "videoType",
+        a.file_size as "fileSize",
+        a.video_size as "videoSize",
+        a.img_size as "imgSize",
+        a.img_area_x as "imgAreaX",
+        a.img_area_y as "imgAreaY",
+        a.thumbnail_x as "thumbnailX",
+        a.thumbnail_y as "thumbnailY",
+        a.watermark_type as "watermarkType",
+        a.watermark_position as "watermarkPosition",
+        a.watermark_file as "watermarkFile",
+        a.watermark_transparent as "watermarkTransparent",
+        a.watermark_text as "watermarkText",
+        a.watermark_text_size as "watermarkTextSize"
+    </sql>
+    <!--&lt;!&ndash;site表&ndash;&gt;
+    <sql id="Joins">
+        LEFT JOIN site p ON p.id = a.site_id
+    </sql>-->
+
+    <!-- 查询条件 -->
+    <sql id="searchCondition">
+        <if test="id !=null">
+            a.id=#{id,jdbcType=INTEGER}
+        </if>
+    </sql>
+
+    <!-- 获得对象 -->
+    <!-- 根据ID查询 -->
+    <select id="get" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        <include refid="TableName"/>
+        <include refid="searchCondition"/>
+        LIMIT  1
+    </select>
+    <!-- /获得对象 -->
+
+
+    <!-- 修改单条数据 -->
+    <update id="update">
+        UPDATE sys_upload_setting
+        <set>
+            file_type = #{fileType,jdbcType=VARCHAR},
+            video_type = #{videoType,jdbcType=VARCHAR},
+            file_size = #{fileSize,jdbcType=INTEGER},
+            video_size = #{videoSize,jdbcType=INTEGER},
+            img_size = #{imgSize,jdbcType=INTEGER},
+            img_area_x = #{imgAreaX,jdbcType=INTEGER},
+            img_area_y = #{imgAreaY,jdbcType=INTEGER},
+            thumbnail_x = #{thumbnailX,jdbcType=INTEGER},
+            thumbnail_y = #{thumbnailY,jdbcType=INTEGER},
+            watermark_type = #{watermarkType,jdbcType=INTEGER},
+            watermark_position = #{watermarkPosition,jdbcType=INTEGER},
+            watermark_file = #{watermarkFile,jdbcType=INTEGER},
+            watermark_transparent = #{watermarkTransparent,jdbcType=INTEGER},
+            watermark_text = #{watermarkText,jdbcType=INTEGER},
+            watermark_text_size = #{watermarkTextSize,jdbcType=INTEGER}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

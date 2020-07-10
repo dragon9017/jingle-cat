@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dosion.model.system.mapper.LevelDao">
+
+	<resultMap type="com.dosion.model.system.entity.Level" id="Entity">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="threshold" column="threshold" />
+		<result property="createBy.id" column="createBy.id" />
+		<result property="createDate" column="createDate" />
+		<result property="updateBy.id" column="updateBy.id" />
+		<result property="updateDate" column="updateDate" />
+		<result property="remarks" column="remarks" />
+		<result property="delFlag" column="delFlag" />
+	</resultMap>
+	<!-- 映射带菜单权限列表的role对象 -->
+	
+	<sql id="Columns">
+    	a.id
+    	,a.name
+    	,a.threshold
+		,a.create_by AS "createBy.id"
+		,a.create_date AS "createDate"
+		,a.update_by AS "updateBy.id"
+		,a.update_date AS "updateDate"
+		,a.remarks
+		,a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="TableName">
+    	FROM sys_level AS a
+    </sql>
+
+	<!-- 根据条件查询list -->
+	<select id="findAll" resultMap="Entity">
+		SELECT
+		<include refid="Columns"/>
+		<include refid="TableName"/>
+		WHERE a.del_flag = 0
+		AND a.id between 4 and 8
+		ORDER BY a.id ASC
+	</select>
+
+	<!-- 根据ID查询 -->
+	<select id="findById" resultMap="Entity">
+		SELECT
+		<include refid="Columns"/>
+		<include refid="TableName"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<!-- 查询个数 -->
+	<select id="findCount" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		<include refid="TableName"/>
+	</select>
+
+	<!-- 增加单条数据 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO sys_level (
+			name,
+			threshold,
+			create_by,
+			create_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{name},
+			#{threshold},
+			#{createBy.id},
+			#{createDate},
+			#{remarks},
+			#{DEL_FLAG_NORMAL}
+		)
+	</insert>
+
+	<!-- 更新数据 -->
+	<update id="update">
+		UPDATE sys_level
+		<set>
+			id =#{id},
+			<if test="name != null and name !=''">
+				name =#{name},
+			</if>
+			<if test="threshold != null and threshold !=''">
+				threshold =#{threshold},
+			</if>
+			<if test="updateBy != null">
+				update_by =#{updateBy.id},
+			</if>
+			<if test="updateDate != null">
+				update_date =#{updateDate}
+			</if>
+		</set>
+		<where>
+			id =#{id}
+		</where>
+	</update>
+	
+	<!-- 删除当前角色 -->
+	<update id="delete">
+		UPDATE sys_level SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 根据条件查询list -->
+	<select id="findUpgradeLevels" resultMap="Entity">
+		SELECT
+		<include refid="Columns"/>
+		<include refid="TableName"/>
+		WHERE a.del_flag = 0
+		AND a.id BETWEEN 4 AND 8
+		ORDER BY a.id ASC
+	</select>
+</mapper>

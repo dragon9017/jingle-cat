@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dosion.model.system.mapper.RoleMapper">
+
+	<resultMap type="com.dosion.model.system.entity.Role" id="Entity">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="enName" column="enName" />
+		<result property="isSys" column="isSys" />
+		<result property="createBy.id" column="createBy.id" />
+		<result property="createDate" column="createDate" />
+		<result property="updateBy.id" column="updateBy.id" />
+		<result property="updateDate" column="updateDate" />
+		<result property="remarks" column="remarks" />
+		<result property="delFlag" column="delFlag" />
+	</resultMap>
+</mapper>
