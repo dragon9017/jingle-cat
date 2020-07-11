@@ -91,10 +91,10 @@ public class TreeUtil {
 			node = new MenuTree();
 			node.setId(menu.getId());
 			node.setParentId(menu.getParentId());
-			node.setName(menu.getName());
+			node.setTitle(menu.getTitle());
 			node.setPath(menu.getPath());
 			node.setCode(menu.getPermission());
-			node.setLabel(menu.getName());
+			node.setLabel(menu.getTitle());
 			node.setIcon(menu.getIcon());
 			node.setType(menu.getType());
 			node.setSort(menu.getSort());

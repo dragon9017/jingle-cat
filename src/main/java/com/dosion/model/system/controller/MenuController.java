@@ -3,6 +3,7 @@
 package com.dosion.model.system.controller;
 
 import com.dosion.annotation.log.SysLog;
+import com.dosion.annotation.permission.Permission;
 import com.dosion.model.system.entity.Menu;
 import com.dosion.model.system.entity.User;
 import com.dosion.model.system.service.MenuService;
@@ -93,7 +94,7 @@ public class MenuController {
      */
     @SysLog("新增菜单")
     @PostMapping
-    @PreAuthorize("@pms.hasPermission('sys_menu_add')")
+    @Permission("sys_menu_add")
     public R save(@Valid @RequestBody Menu menu) {
         return R.ok(menuService.save(menu));
     }
@@ -106,7 +107,7 @@ public class MenuController {
      */
     @SysLog("删除菜单")
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pms.hasPermission('sys_menu_del')")
+    @Permission("sys_menu_del")
     public R removeById(@PathVariable Integer id) {
         return menuService.removeMenuById(id);
     }
@@ -119,7 +120,7 @@ public class MenuController {
      */
     @SysLog("更新菜单")
     @PutMapping
-    @PreAuthorize("@pms.hasPermission('sys_menu_edit')")
+    @Permission("sys_menu_edit")
     public R update(@Valid @RequestBody Menu menu) {
         return R.ok(menuService.updateMenuById(menu));
     }

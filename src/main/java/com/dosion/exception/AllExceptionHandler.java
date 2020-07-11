@@ -4,6 +4,9 @@ import com.dosion.constant.Constant;
 import com.dosion.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,6 +23,21 @@ public class AllExceptionHandler {
     private String active;
 
     /**
+     * 自定义异常统一处理
+     *
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler(value = CustomException.class)
+    public ResponseEntity<R> customException(CustomException exception) {
+        log.error("自定义异常，错误码：{}，异常信息：{}", exception.getCode(), exception.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.valueOf(exception.getCode());
+        return new ResponseEntity<R>(R.failed(exception.getMessage()), responseHeaders, httpStatus);
+    }
+
+
+    /**
      * 所有异常报错
      *
      * @param exception
@@ -27,17 +45,19 @@ public class AllExceptionHandler {
      * @throws Exception
      */
     @ExceptionHandler(value = Exception.class)
-    public R allExceptionHandler(Exception exception) {
-        exception.printStackTrace();
-        log.error("程序异常:", exception);
+    public ResponseEntity<R> allExceptionHandler(Exception exception) {
+        log.error("系统异常，异常信息：{}", exception.getMessage());
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        R<Object> failed = null;
         //生产环境
         if (Constant.PROD.equals(active)) {
-            return R.failed("程序异常，请联系工作人员");
+            failed = R.failed("程序异常，请联系工作人员");
         }
         //开发环境
         else if (Constant.DEV.equals(active)) {
-            return R.failed("程序异常:" + exception.getMessage());
+            failed = R.failed(exception.getMessage());
         }
-        return R.failed("程序异常:" + exception.getMessage());
+        return new ResponseEntity<R>(failed, responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

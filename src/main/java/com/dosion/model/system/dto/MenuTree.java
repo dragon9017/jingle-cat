@@ -27,7 +27,7 @@ public class MenuTree extends TreeNode implements Serializable {
 	 *  菜单名称
 	 */
 	@ApiModelProperty(value = "菜单名称")
-	private String name;
+	private String title;
 	private boolean spread = false;
 	/**
 	 * 前端路由标识路径
@@ -71,14 +71,14 @@ public class MenuTree extends TreeNode implements Serializable {
 	public MenuTree(int id, String name, int parentId) {
 		this.id = id;
 		this.parentId = parentId;
-		this.name = name;
+		this.title = name;
 		this.label = name;
 	}
 
 	public MenuTree(int id, String name, MenuTree parent) {
 		this.id = id;
 		this.parentId = parent.getId();
-		this.name = name;
+		this.title = name;
 		this.label = name;
 	}
 
@@ -86,10 +86,10 @@ public class MenuTree extends TreeNode implements Serializable {
 		this.id = menuVo.getId();
 		this.parentId = menuVo.getParentId();
 		this.icon = menuVo.getIcon();
-		this.name = menuVo.getName();
+		this.title = menuVo.getTitle();
 		this.path = menuVo.getPath();
 		this.type = menuVo.getType();
-		this.label = menuVo.getName();
+		this.label = menuVo.getTitle();
 		this.sort = menuVo.getSort();
 		this.keepAlive = menuVo.getKeepAlive();
 	}

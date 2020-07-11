@@ -2,7 +2,6 @@
 
 package com.dosion.model.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -14,7 +13,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -42,7 +41,7 @@ public class Menu extends Model<Menu> {
      */
     @NotBlank(message = "菜单名称不能为空")
     @ApiModelProperty(value = "菜单名称")
-    private String name;
+    private String title;
     /**
      * 菜单权限标识
      */
@@ -85,12 +84,12 @@ public class Menu extends Model<Menu> {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 更新时间
      */
     @ApiModelProperty(value = "更新时间")
-    private LocalDateTime updateTime;
+    private Date updateTime;
     /**
      * 0--正常 1--删除
      */
