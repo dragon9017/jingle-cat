@@ -4,10 +4,10 @@ import com.dosion.annotation.log.SysLog;
 import com.dosion.annotation.permission.Permission;
 import com.dosion.annotation.validate.ValidateFiled;
 import com.dosion.annotation.validate.ValidateGroup;
-import com.dosion.back.R;
 import com.dosion.model.system.entity.Dict;
 import com.dosion.model.system.entity.User;
 import com.dosion.model.system.service.DictService;
+import com.dosion.utils.R;
 import com.dosion.utils.SecurityUtils;
 import com.dosion.utils.StringUtils;
 import com.github.pagehelper.PageInfo;
@@ -39,7 +39,7 @@ public class DictController {
     @RequestMapping("/list")
     public R<List<Dict>> list(Dict dict, Integer page, Integer limit, HttpServletRequest req, HttpServletResponse rep) {
         PageInfo<Dict> byPage = service.findByPage(dict, page, limit);
-        return new R(byPage.getList()).put("count", byPage.getTotal());
+        return R.ok(byPage.getList());//.put("count", byPage.getTotal());
     }
 
     /**
@@ -53,7 +53,7 @@ public class DictController {
     @RequestMapping("/findAll")
     public R<List<Dict>> findAll(HttpServletRequest req, Dict dict, HttpServletResponse rep) {
         List<Dict> list = service.findAll(dict);
-        return new R(list);
+        return R.ok(list);
     }
 
     /**
@@ -68,10 +68,10 @@ public class DictController {
     @PostMapping("save")
     @Permission("sys:dict:edit")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-    public R<String> save(@RequestBody Dict dict, HttpServletRequest req, HttpServletResponse rep) {
+    public R save(@RequestBody Dict dict, HttpServletRequest req, HttpServletResponse rep) {
         User user = SecurityUtils.getUser();
         service.save(dict, user);
-        return new R<String>().msg("编辑字典成功");
+        return R.ok().setMsg("编辑字典成功");
     }
 
 
@@ -87,9 +87,9 @@ public class DictController {
     @RequestMapping(value = "delete")
     @Permission("sys:dict:edit")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-    public R<String> delete(HttpServletRequest request, Dict dict, HttpServletResponse response) {
+    public R delete(HttpServletRequest request, Dict dict, HttpServletResponse response) {
         service.delete(dict);
-        return new R<String>().msg("删除字典成功");
+        return R.ok().setMsg("删除字典成功");
     }
 
     /**
@@ -105,7 +105,7 @@ public class DictController {
         if (StringUtils.isNotBlank(dict.getType())) {
             list = service.findAll(dict);
         }
-        return new R(list);
+        return R.ok(list);
     }
 
     /**
@@ -117,7 +117,7 @@ public class DictController {
     })
     public R<Dict> getByTypeDic(Dict dict, HttpServletRequest request, HttpServletResponse response) {
         Dict dict1 = service.getDict(dict);
-        return new R<Dict>(dict1).msg("获取字典信息成功!");
+        return R.ok(dict1).setMsg("获取字典信息成功!");
     }
 
 }

@@ -1,6 +1,7 @@
 package com.dosion.annotation.login;
 
-import com.dosion.back.R;
+import com.dosion.enums.ResultStatusEnum;
+import com.dosion.exception.CustomException;
 import com.dosion.model.system.entity.User;
 import com.dosion.model.system.service.SessionService;
 import lombok.AllArgsConstructor;
@@ -10,9 +11,12 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * 环绕通知
@@ -44,14 +48,9 @@ public class LoginAop {
         // 判断是否存在@Login注解
         if (method.isAnnotationPresent(Login.class)) {
             //获取参数列表
-            Object[] args = point.getArgs();
-            HttpServletRequest request = null;
-            for (Object arg : args) {
-                if (arg instanceof HttpServletRequest) {
-                    request = (HttpServletRequest) arg;
-                    break;
-                }
-            }
+            //获取 request
+            HttpServletRequest request = ((ServletRequestAttributes) Objects
+                    .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
             //参数列表中无HttpServletRequest抛出异常
             if (request == null) {
                 throw new Exception(className + "." + methodName + "缺少HttpServletRequest参数");
@@ -59,7 +58,7 @@ public class LoginAop {
             //获取用户信息
             User model = sessionService.getSession(request);
             if (model == null) {
-                return new R().noLogin();
+                throw new CustomException(ResultStatusEnum.NOT_LOGIN);
             }
             // 获取当前执行的方法
             ProceedingJoinPoint function = (ProceedingJoinPoint) point;

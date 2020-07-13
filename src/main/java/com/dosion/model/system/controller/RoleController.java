@@ -4,10 +4,10 @@ import com.dosion.annotation.log.SysLog;
 import com.dosion.annotation.permission.Permission;
 import com.dosion.annotation.validate.ValidateFiled;
 import com.dosion.annotation.validate.ValidateGroup;
-import com.dosion.back.R;
-import com.dosion.model.system.entity.User;
 import com.dosion.model.system.entity.Role;
+import com.dosion.model.system.entity.User;
 import com.dosion.model.system.service.RoleService;
+import com.dosion.utils.R;
 import com.dosion.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Isolation;
@@ -47,7 +47,7 @@ public class RoleController {
         User user = SecurityUtils.getUser();
         role.setCreateBy(user);
         List<Role> list = service.list(null);
-        return new R(list);
+        return R.ok(list);
     }
 
     /**
@@ -64,7 +64,7 @@ public class RoleController {
     @Permission("sys:role:view")
     public R<Role> form(Role role, HttpServletRequest request) {
         role = service.getById(role);
-        return new R(role);
+        return R.ok(role);
     }
 
     /**
@@ -82,7 +82,7 @@ public class RoleController {
             @ValidateFiled(index = 0, notNull = true, filedName = "level", minVal = 0, msg = "缺少levle参数或参数不合法！")
     })
     @Permission("sys:role:edit")
-    public R<String> save(@RequestBody Role role, HttpServletRequest request, HttpServletResponse response) {
+    public R save(@RequestBody Role role, HttpServletRequest request, HttpServletResponse response) {
 
        /* if (role.getId() == null && !"true".equals(checkName(role.getOldName(), role.getName()))) {
             return new R<String>().error("保存角色" + role.getName() + "失败, 角色名已存在");
@@ -92,7 +92,7 @@ public class RoleController {
         }*/
         User user = SecurityUtils.getUser();
         service.save(role);
-        return new R().msg("保存角色" + role.getName() + "成功");
+        return R.ok().setMsg("保存角色" + role.getName() + "成功");
     }
 
     /**
@@ -109,10 +109,10 @@ public class RoleController {
     })
     @Permission("sys:role:delete")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-    public R<String> delete(Role role, HttpServletRequest request, HttpServletResponse response) {
+    public R delete(Role role, HttpServletRequest request, HttpServletResponse response) {
         role = service.getById(role);
         service.removeById(role.getId());
-        return new R<String>().msg("删除角色成功");
+        return R.ok().setMsg("删除角色成功");
     }
 
     /**

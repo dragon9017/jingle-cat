@@ -1,9 +1,9 @@
 package com.dosion.model.system.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.dosion.back.R;
 import com.dosion.model.system.entity.SysLog;
 import com.dosion.model.system.service.LogService;
+import com.dosion.utils.R;
+import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * 日志 controller
+ *
  * @author 陈登文
  */
 @RestController
@@ -31,9 +32,9 @@ public class LogController {
      * @param rep
      * @return
      */
-    @RequestMapping(value = "list",method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public R<List<SysLog>> list(SysLog model, Integer page, Integer limit, HttpServletRequest req, HttpServletResponse rep) {
         PageInfo<SysLog> byPage = logService.findByPage(model, page, limit);
-        return new R<List<SysLog>>(byPage.getList()).put("count", byPage.getTotal());
+        return R.ok(byPage.getList());
     }
 }

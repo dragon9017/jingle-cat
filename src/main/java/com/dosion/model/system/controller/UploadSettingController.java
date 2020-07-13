@@ -1,9 +1,9 @@
 package com.dosion.model.system.controller;
 
 import com.dosion.annotation.permission.Permission;
-import com.dosion.back.R;
 import com.dosion.model.system.entity.UploadSetting;
 import com.dosion.model.system.service.UploadSettingService;
+import com.dosion.utils.R;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Isolation;
@@ -28,12 +28,12 @@ public class UploadSettingController {
      */
     @RequestMapping("get")
     @Permission("upload:setting:view")
-    public R<String> get() {
+    public R<UploadSetting> get() {
         UploadSetting uploadSetting = uploadSettingService.getById(1);
         if (uploadSetting != null) {
-            return new R(uploadSetting);
+            return R.ok(uploadSetting);
         } else {
-            return new R("找不到资源");
+            return R.failed(uploadSetting).setMsg("找不到资源");
         }
     }
 
@@ -46,9 +46,9 @@ public class UploadSettingController {
     @PutMapping
     @Permission("upload:setting:edit")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public R<String> update(UploadSetting uploadSetting) {
+    public R update(UploadSetting uploadSetting) {
         uploadSetting.setId(1);
         uploadSettingService.save(uploadSetting);
-        return new R("更新文件上传配置成功!");
+        return R.ok().setMsg("更新文件上传配置成功!");
     }
 }

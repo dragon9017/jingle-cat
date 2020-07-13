@@ -1,7 +1,7 @@
 package com.dosion.annotation.validate;
 
+import com.dosion.utils.R;
 import com.google.common.collect.Maps;
-import com.dosion.back.R;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -53,7 +53,7 @@ public class ValidateAspectAop {
         if (Boolean.valueOf(flagMap.get(FLAG).toString())) {
             return joinPoint.proceed();
         } else {
-            return new R().error(flagMap.get("msg").toString());
+            return R.failed().setMsg(flagMap.get("msg").toString());
         }
     }
 

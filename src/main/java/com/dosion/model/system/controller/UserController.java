@@ -4,11 +4,11 @@ import com.dosion.annotation.log.SysLog;
 import com.dosion.annotation.permission.Permission;
 import com.dosion.annotation.validate.ValidateFiled;
 import com.dosion.annotation.validate.ValidateGroup;
-import com.dosion.back.R;
 import com.dosion.model.system.entity.User;
 import com.dosion.model.system.service.DictService;
 import com.dosion.model.system.service.RoleService;
 import com.dosion.model.system.service.UserService;
+import com.dosion.utils.R;
 import com.dosion.utils.SecurityUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -51,7 +51,7 @@ public class UserController {
     @Permission("sys:manager:view")
     public R<List<User>> fondManagerByPage(User model, Integer page, Integer limit, HttpServletRequest request) {
         PageInfo<User> managerByPage = service.page(null);
-        return new R(managerByPage.getList()).put("count", managerByPage.getTotal());
+        return R.ok(managerByPage.getList());//put("count", managerByPage.getTotal());
     }
 
 
@@ -71,7 +71,7 @@ public class UserController {
         model.setId(user.getId());
         model.setRole(user.getRole());
         List<User> list = service.list(null);
-        return new R(list);
+        return R.ok(list);
     }
 
 
@@ -93,11 +93,11 @@ public class UserController {
     })
     @Permission("sys:manager:delete")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public R<String> deleteManager(User model, HttpServletRequest request) {
+    public R deleteManager(User model, HttpServletRequest request) {
         if (model.getId() == 1) {
-            return new R<String>().error("超级管理员不得删除");
+            return R.failed().setMsg("超级管理员不得删除");
         }
         service.removeById(model);
-        return new R<String>().msg("删除成功！");
+        return R.failed().setMsg("删除成功！");
     }
 }
