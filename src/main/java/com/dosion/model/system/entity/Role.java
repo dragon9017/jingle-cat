@@ -1,17 +1,19 @@
 package com.dosion.model.system.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dosion.base.BaseEntity;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 数据库表：sys_role
@@ -23,40 +25,44 @@ import java.util.List;
 @ApiModel(value = "角色")
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_role")
-public class Role extends BaseEntity<Role> {
-    /**
-     * 角色名称
-     */
-    @TableId
-    @ApiModelProperty(value = "主键ID")
-    private Integer id;
+public class Role extends Model<Role> {
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * 名称
-     */
-    @ApiModelProperty(value = "名称")
-    private String name;
+    @TableId(value = "role_id", type = IdType.AUTO)
+    @ApiModelProperty(value = "角色编号")
+    private Integer roleId;
 
-    /**
-     * 英文名称
-     */
-    @ApiModelProperty(value = "英文名称")
-    private String enName;
+    @NotBlank(message = "角色名称不能为空")
+    @ApiModelProperty(value = "角色名称")
+    private String roleName;
 
-    /**
-     * 等级
-     */
-    @ApiModelProperty(value = "等级")
-    private Integer level;
+    @NotBlank(message = "角色标识不能为空")
+    @ApiModelProperty(value = "角色标识")
+    private String roleCode;
 
-    /**
-     * 描述
-     */
-    @ApiModelProperty(value = "描述")
-    private String remarks;
+    @ApiModelProperty(value = "角色描述")
+    private String roleDesc;
 
+    @NotNull(message = "数据权限类型不能为空")
+    @ApiModelProperty(value = "数据权限类型")
+    private Integer dsType;
     /**
-     * 0-正常，1-删除
+     * 数据权限作用范围
+     */
+    @ApiModelProperty(value = "数据权限作用范围")
+    private String dsScope;
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
+    /**
+     * 修改时间
+     */
+    @ApiModelProperty(value = "修改时间")
+    private Date updateTime;
+    /**
+     * 删除标识（0-正常,1-删除）
      */
     @TableLogic
     @ApiModelProperty(value = "删除标记,1:已删除,0:正常")

@@ -62,7 +62,8 @@ public class PermissionAop {
             if (model == null) {
                 throw new CustomException(ResultStatusEnum.NOT_LOGIN);
             }
-            if (model.getRole().getLevel() != 0) {
+
+            if (!"ROLE_ADMIN".equals(model.getRole().getRoleCode())) {
                 boolean flag = true;
                 for (String e : model.getPermissions()) {
                     String[] split = annotation.value().split(",");

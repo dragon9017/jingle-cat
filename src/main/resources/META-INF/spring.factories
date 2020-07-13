@@ -2,4 +2,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
     com.dosion.minio.MinioAutoConfiguration,\
     com.dosion.cache.RedisTemplateConfig,\
     com.dosion.cache.RedisCacheManagerConfig,\
-    com.dosion.cache.RedisCacheAutoConfiguration
+    com.dosion.cache.RedisCacheAutoConfiguration,\
+    com.dosion.configuration.MybatisPlusConfiguration,\
+    com.dosion.configuration.WebMvcConfig

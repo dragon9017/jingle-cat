@@ -1,25 +1,28 @@
 package com.dosion.model.system.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dosion.annotation.log.SysLog;
 import com.dosion.annotation.permission.Permission;
 import com.dosion.annotation.validate.ValidateFiled;
 import com.dosion.annotation.validate.ValidateGroup;
 import com.dosion.model.system.entity.Role;
 import com.dosion.model.system.entity.User;
+import com.dosion.model.system.service.RoleMenuService;
 import com.dosion.model.system.service.RoleService;
+import com.dosion.model.system.vo.RoleVo;
 import com.dosion.utils.R;
 import com.dosion.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -31,121 +34,103 @@ import java.util.List;
 @RestController
 @RequestMapping("${controller.prefix}/${controller.system.prefix}/role")
 public class RoleController {
-
-    private final RoleService service;
+    private final RoleService roleService;
+    private final RoleMenuService roleMenuService;
 
     /**
-     * 角色列表
+     * 通过ID查询角色信息
      *
-     * @param request
-     * @param role
-     * @return
+     * @param id ID
+     * @return 角色信息
      */
-    @RequestMapping("list")
-    @Permission("sys:role:view")
-    public R<List<Role>> list(HttpServletRequest request, Role role) {
-        User user = SecurityUtils.getUser();
-        role.setCreateBy(user);
-        List<Role> list = service.list(null);
-        return R.ok(list);
+    @GetMapping("/{id}")
+    public R getById(@PathVariable Integer id) {
+        return R.ok(roleService.getById(id));
     }
 
     /**
-     * 根据id查询角色
+     * 添加角色
      *
-     * @param request
-     * @param role
-     * @return
+     * @param role 角色信息
+     * @return success、false
      */
-    @RequestMapping(value = "form")
-    @ValidateGroup(fileds = {
-            @ValidateFiled(index = 0, notNull = true, filedName = "id", msg = "缺少id参数")
-    })
-    @Permission("sys:role:view")
-    public R<Role> form(Role role, HttpServletRequest request) {
-        role = service.getById(role);
-        return R.ok(role);
+    @SysLog("添加角色")
+    @PostMapping
+    @PreAuthorize("@pms.hasPermission('sys_role_add')")
+    public R save(@Valid @RequestBody Role role) {
+        return R.ok(roleService.save(role));
     }
 
     /**
-     * 编辑角色
+     * 修改角色
      *
-     * @param request
-     * @param role
-     * @return
+     * @param role 角色信息
+     * @return success/false
      */
-    @SysLog("编辑角色")
-    @PostMapping(value = "save")
-    @ValidateGroup(fileds = {
-            @ValidateFiled(index = 0, notNull = true, filedName = "name", maxLen = 30, msg = "缺少name参数或参数不合法！"),
-            @ValidateFiled(index = 0, notNull = true, filedName = "enName", maxLen = 30, msg = "缺少enname参数或参数不合法！"),
-            @ValidateFiled(index = 0, notNull = true, filedName = "level", minVal = 0, msg = "缺少levle参数或参数不合法！")
-    })
-    @Permission("sys:role:edit")
-    public R save(@RequestBody Role role, HttpServletRequest request, HttpServletResponse response) {
-
-       /* if (role.getId() == null && !"true".equals(checkName(role.getOldName(), role.getName()))) {
-            return new R<String>().error("保存角色" + role.getName() + "失败, 角色名已存在");
-        }
-        if (role.getId() == null && !"true".equals(checkEnname(role.getOldEnname(), role.getEnName()))) {
-            return new R<String>().error("保存角色" + role.getName() + "失败, 英文名已存在");
-        }*/
-        User user = SecurityUtils.getUser();
-        service.save(role);
-        return R.ok().setMsg("保存角色" + role.getName() + "成功");
+    @SysLog("修改角色")
+    @PutMapping
+    @PreAuthorize("@pms.hasPermission('sys_role_edit')")
+    public R update(@Valid @RequestBody Role role) {
+        return R.ok(roleService.updateById(role));
     }
 
     /**
      * 删除角色
      *
-     * @param request
-     * @param role
+     * @param id
      * @return
      */
     @SysLog("删除角色")
-    @RequestMapping(value = "delete")
-    @ValidateGroup(fileds = {
-            @ValidateFiled(index = 0, notNull = true, filedName = "id", msg = "缺少id参数")
-    })
-    @Permission("sys:role:delete")
-    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-    public R delete(Role role, HttpServletRequest request, HttpServletResponse response) {
-        role = service.getById(role);
-        service.removeById(role.getId());
-        return R.ok().setMsg("删除角色成功");
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@pms.hasPermission('sys_role_del')")
+    public R removeById(@PathVariable Integer id) {
+        return R.ok(roleService.removeRoleById(id));
     }
 
     /**
-     * 验证角色名是否有效
+     * 获取角色列表
      *
-     * @param oldName
-     * @param name
-     * @return
+     * @return 角色列表
      */
-    @RequestMapping(value = "checkName")
-    public String checkName(String oldName, String name) {
-        /*if (name != null && name.equals(oldName)) {
-            return "true";
-        } else if (name != null && service.getRoleCountByName(name) <= 0) {
-            return "true";
-        }*/
-        return "false";
+    @GetMapping("/list")
+    public R listRoles() {
+        return R.ok(roleService.list(Wrappers.emptyWrapper()));
     }
 
     /**
-     * 验证角色英文名是否有效
+     * 分页查询角色信息
      *
-     * @param oldEnname
-     * @param enName
+     * @param page 分页对象
+     * @return 分页对象
+     */
+    @GetMapping("/page")
+    public R getRolePage(Page page) {
+        return R.ok(roleService.page(page, Wrappers.emptyWrapper()));
+    }
+
+    /**
+     * 更新角色菜单
+     *
+     * @param roleVo 角色对象
+     * @return success、false
+     */
+    @SysLog("更新角色菜单")
+    @PutMapping("/menu")
+    @PreAuthorize("@pms.hasPermission('sys_role_perm')")
+    public R saveRoleMenus(@RequestBody RoleVo roleVo) {
+        Role role = roleService.getById(roleVo.getRoleId());
+        return R.ok(roleMenuService.saveRoleMenus(role.getRoleCode()
+                , roleVo.getRoleId(), roleVo.getMenuIds()));
+    }
+
+    /**
+     * 通过角色ID 查询角色列表
+     *
+     * @param roleIdList 角色ID
      * @return
      */
-    @RequestMapping(value = "check-enName")
-    public String checkEnname(String oldEnname, String enName) {
-        /*if (enName != null && enName.equals(oldEnname)) {
-            return "true";
-        } else if (enName != null && service.getRoleCountByEnName(enName) <= 0) {
-            return "true";
-        }*/
-        return "false";
+    @PostMapping("/getRoleList")
+    public R getRoleList(@RequestBody List<String> roleIdList) {
+        return R.ok(roleService.listByIds(roleIdList));
     }
 }

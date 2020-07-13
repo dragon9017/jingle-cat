@@ -3,6 +3,7 @@
 package com.dosion.model.system.controller;
 
 import com.dosion.annotation.log.SysLog;
+import com.dosion.annotation.login.Login;
 import com.dosion.annotation.permission.Permission;
 import com.dosion.model.system.entity.Menu;
 import com.dosion.model.system.entity.User;
@@ -57,6 +58,7 @@ public class MenuController {
      * @return 树形菜单
      */
     @GetMapping(value = "/tree")
+    @Login
     public R getTree(boolean lazy, Integer parentId) {
         return R.ok(menuService.treeMenu(lazy, parentId));
     }
