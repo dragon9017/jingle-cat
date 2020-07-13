@@ -1,7 +1,6 @@
 
 package com.dosion.model.system.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,34 +14,53 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * 字典表
+ * 字典项
  *
  * @author cdw
  * @date 2019/03/19
  */
 @Data
-@ApiModel(value = "字典类型")
+@ApiModel(value = "字典项")
 @EqualsAndHashCode(callSuper = true)
-@TableName("sys_dict")
-public class Dict extends Model<Dict> {
+@TableName("sys_dict_item")
+public class DictItem extends Model<DictItem> {
     private static final long serialVersionUID = 1L;
-
     /**
      * 编号
      */
     @TableId
-    @ApiModelProperty(value = "字典编号")
+    @ApiModelProperty(value = "字典项id")
     private Integer id;
+    /**
+     * 所属字典类id
+     */
+    @ApiModelProperty(value = "所属字典类id")
+    private Integer dictId;
+    /**
+     * 数据值
+     */
+    @ApiModelProperty(value = "数据值")
+    private String value;
+    /**
+     * 标签名
+     */
+    @ApiModelProperty(value = "标签名")
+    private String label;
     /**
      * 类型
      */
-    @ApiModelProperty(value = "字典类型")
+    @ApiModelProperty(value = "类型")
     private String type;
     /**
      * 描述
      */
-    @ApiModelProperty(value = "字典描述")
+    @ApiModelProperty(value = "描述")
     private String description;
+    /**
+     * 排序（升序）
+     */
+    @ApiModelProperty(value = "排序值，默认升序")
+    private Integer sort;
     /**
      * 创建时间
      */
@@ -56,12 +74,6 @@ public class Dict extends Model<Dict> {
 	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
     /**
-     * 是否是系统内置
-     */
-    @TableField(value = "`system`")
-    @ApiModelProperty(value = "是否系统内置")
-    private String system;
-    /**
      * 备注信息
      */
     @ApiModelProperty(value = "备注信息")
@@ -72,6 +84,5 @@ public class Dict extends Model<Dict> {
     @TableLogic
     @ApiModelProperty(value = "删除标记,1:已删除,0:正常")
     private String delFlag;
-
 
 }

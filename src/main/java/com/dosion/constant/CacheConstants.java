@@ -36,7 +36,12 @@ public interface CacheConstants {
 	/**
 	 * 字典信息缓存
 	 */
-	String DICT_DETAILS = "dict_details";
+	String DICT_DETAILS = "jingle_cat_dict_details";
+
+	/**
+	 * 参数缓存
+	 */
+	String PARAMS_DETAILS = "jingle_cat_params_details";
 
 	/**
 	 * redis reload 事件

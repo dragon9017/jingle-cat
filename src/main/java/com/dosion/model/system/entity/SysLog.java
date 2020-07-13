@@ -19,7 +19,7 @@
 
 package com.dosion.model.system.entity;
 
-import com.dosion.base.BaseEntity;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import java.util.Date;
@@ -33,7 +33,7 @@ import java.util.Date;
  * @since 2019年6月11日 00:34:59
  */
 @Data
-public class SysLog extends BaseEntity<SysLog> {
+public class SysLog extends Model<SysLog> {
 
     private static final long serialVersionUID = 1L;
 
@@ -99,4 +99,9 @@ public class SysLog extends BaseEntity<SysLog> {
      * 创建日期
      */
     private Date createTime;
+
+    /**
+     *
+     */
+    private User createBy;
 }

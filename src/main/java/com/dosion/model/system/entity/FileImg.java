@@ -1,28 +1,19 @@
 package com.dosion.model.system.entity;
 
-import com.dosion.base.BaseEntity;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+
 /**
  * @author cdw
  * 管理员
- * */
+ */
 @Data
-public class FileImg extends BaseEntity<FileImg> {
-	
+public class FileImg extends Model<FileImg> {
 
-    /** 
-	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
-	*/ 
-	private static final long serialVersionUID = 1914536603586217322L;
+    private static final long serialVersionUID = 1914536603586217322L;
 
-    public FileImg() {
-    }
 
-    public FileImg(Integer id) {
-        this.setId(id);
-    }
-
-	private String url;
+    private String url;
 
     private String name;
 

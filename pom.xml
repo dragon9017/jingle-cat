@@ -40,6 +40,7 @@
         <swagger.fox.version>2.9.2</swagger.fox.version>
         <minio.version>6.0.8</minio.version>
         <kaptcha.version>1.6.2</kaptcha.version>
+        <druid.version>1.1.21</druid.version>
     </properties>
 
     <dependencies>
@@ -60,14 +61,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- json 依赖 -->
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>2.4</version>
-            <classifier>jdk15</classifier><!--指定jdk版本-->
         </dependency>
 
         <!--mybatis plus extension,包含了mybatis plus core-->
@@ -97,11 +90,11 @@
             <version>${mysql.version}</version>
         </dependency>
 
-        <!-- alibaba 数据连接池 -->
+        <!-- druid 连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>1.1.0</version>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
         </dependency>
         <!-- aop -->
         <dependency>
@@ -147,38 +140,11 @@
             <version>${thumbnailator.version}</version>
         </dependency>
 
-        <!-- 动态类支持 -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>${cglib-nodep.version}</version>
-        </dependency>
-
         <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.58</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>3.3.0</version>
         </dependency>
 
         <!--文件系统-->
@@ -207,12 +173,10 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
-
-        <!-- 分页插件 -->
+        <!--json模块-->
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
         </dependency>
 
     </dependencies>

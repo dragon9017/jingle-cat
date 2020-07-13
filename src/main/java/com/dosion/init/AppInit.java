@@ -1,15 +1,10 @@
 package com.dosion.init;
 
-import com.dosion.utils.redis.JedisUtil;
-import com.dosion.utils.redis.Redis;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * spring Boot 启动运行
@@ -33,7 +28,7 @@ public class AppInit implements ApplicationRunner {
     private String appUrl;
 
     @Override
-    public void run(ApplicationArguments var1) throws Exception {
+    public void run(ApplicationArguments var1){
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("\r\n======================================================================\r\n");

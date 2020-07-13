@@ -1,6 +1,7 @@
 package com.dosion.model.system.controller;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.dosion.constant.CacheConstants;
 import com.dosion.model.system.entity.Role;
@@ -104,7 +105,7 @@ public class LoginController {
         //设置权限列表（menu.permission）
         Set<String> permissions = new HashSet<>();
         List<String> collect = menuService.findMenuByRoleId(user.getRoleId()).stream()
-                .filter(menuVo -> org.apache.commons.lang.StringUtils.isNotEmpty(menuVo.getPermission()))
+                .filter(menuVo -> StrUtil.isNotEmpty(menuVo.getPermission()))
                 .map(MenuVO::getPermission)
                 .collect(Collectors.toList());
         permissions.addAll(collect);

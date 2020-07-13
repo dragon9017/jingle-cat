@@ -1,27 +1,19 @@
 package com.dosion.model.system.controller;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dosion.annotation.log.SysLog;
-import com.dosion.annotation.permission.Permission;
-import com.dosion.annotation.validate.ValidateFiled;
-import com.dosion.annotation.validate.ValidateGroup;
 import com.dosion.model.system.entity.Role;
-import com.dosion.model.system.entity.User;
 import com.dosion.model.system.service.RoleMenuService;
 import com.dosion.model.system.service.RoleService;
 import com.dosion.model.system.vo.RoleVo;
 import com.dosion.utils.R;
-import com.dosion.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -104,8 +96,12 @@ public class RoleController {
      * @return 分页对象
      */
     @GetMapping("/page")
-    public R getRolePage(Page page) {
-        return R.ok(roleService.page(page, Wrappers.emptyWrapper()));
+    public R<Page<Role>> getRolePage(Page page, String name) {
+        QueryWrapper<Role> query = Wrappers.query();
+        if (StrUtil.isNotEmpty(name)) {
+            query = query.like("role_name", name);
+        }
+        return R.ok(roleService.page(page, query));
     }
 
     /**

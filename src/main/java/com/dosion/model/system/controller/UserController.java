@@ -5,12 +5,9 @@ import com.dosion.annotation.permission.Permission;
 import com.dosion.annotation.validate.ValidateFiled;
 import com.dosion.annotation.validate.ValidateGroup;
 import com.dosion.model.system.entity.User;
-import com.dosion.model.system.service.DictService;
-import com.dosion.model.system.service.RoleService;
 import com.dosion.model.system.service.UserService;
 import com.dosion.utils.R;
 import com.dosion.utils.SecurityUtils;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,8 +36,6 @@ import java.util.List;
 @RequestMapping("${controller.prefix}/${controller.system.prefix}/manager")
 public class UserController {
     private final UserService service;
-    private final RoleService roleService;
-    private final DictService dictService;
 
     @ApiOperation("分页查询管理员")
     @ApiImplicitParams({
@@ -50,8 +45,8 @@ public class UserController {
     @RequestMapping(value = "list")
     @Permission("sys:manager:view")
     public R<List<User>> fondManagerByPage(User model, Integer page, Integer limit, HttpServletRequest request) {
-        PageInfo<User> managerByPage = service.page(null);
-        return R.ok(managerByPage.getList());//put("count", managerByPage.getTotal());
+        //PageInfo<User> managerByPage = service.page(null);
+        return null;//R.ok(managerByPage.getList());//put("count", managerByPage.getTotal());
     }
 
 

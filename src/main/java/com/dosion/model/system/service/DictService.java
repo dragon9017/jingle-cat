@@ -1,13 +1,31 @@
+
 package com.dosion.model.system.service;
 
-import com.dosion.base.BaseService;
-import com.dosion.model.system.mapper.DictDao;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.dosion.model.system.entity.Dict;
-import org.springframework.stereotype.Service;
+import com.dosion.utils.R;
 
-@Service
-public class DictService extends BaseService<DictDao, Dict> {
-	public Dict getDict(Dict dict){
-	  return dao.getDict(dict);
-  };
+/**
+ * 字典表
+ *
+ * @author cdw
+ * @date 2019/03/19
+ */
+public interface DictService extends IService<Dict> {
+
+    /**
+     * 根据ID 删除字典
+     *
+     * @param id
+     * @return
+     */
+    R removeDict(Integer id);
+
+    /**
+     * 更新字典
+     *
+     * @param dict 字典
+     * @return
+     */
+    R updateDict(Dict dict);
 }

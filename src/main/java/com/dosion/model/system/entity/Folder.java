@@ -1,6 +1,6 @@
 package com.dosion.model.system.entity;
 
-import com.dosion.base.BaseEntity;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 /**
@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2019-01-03 18:19:43
  */
 @Data
-public class Folder extends BaseEntity<Folder> {
+public class Folder extends Model {
 
     /**
      * 类型 0=图片 1=音频 2=视频 3=附件 3=系统文件

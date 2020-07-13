@@ -3,7 +3,6 @@ package com.dosion.model.system.controller;
 import com.dosion.model.system.entity.SysLog;
 import com.dosion.model.system.service.LogService;
 import com.dosion.utils.R;
-import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +33,7 @@ public class LogController {
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public R<List<SysLog>> list(SysLog model, Integer page, Integer limit, HttpServletRequest req, HttpServletResponse rep) {
-        PageInfo<SysLog> byPage = logService.findByPage(model, page, limit);
-        return R.ok(byPage.getList());
+        //PageInfo<SysLog> byPage = logService.findByPage(model, page, limit);
+        return null;//R.ok(byPage.getList());
     }
 }

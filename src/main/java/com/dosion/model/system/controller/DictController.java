@@ -1,123 +1,173 @@
+
+
 package com.dosion.model.system.controller;
 
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dosion.annotation.log.SysLog;
-import com.dosion.annotation.permission.Permission;
-import com.dosion.annotation.validate.ValidateFiled;
-import com.dosion.annotation.validate.ValidateGroup;
 import com.dosion.model.system.entity.Dict;
-import com.dosion.model.system.entity.User;
+import com.dosion.model.system.entity.DictItem;
+import com.dosion.model.system.service.DictItemService;
 import com.dosion.model.system.service.DictService;
 import com.dosion.utils.R;
-import com.dosion.utils.SecurityUtils;
-import com.dosion.utils.StringUtils;
-import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
 
+/**
+ * <p>
+ * 字典表 前端控制器
+ * </p>
+ *
+ * @author cdw
+ * @since 2019-03-19
+ */
 @RestController
 @AllArgsConstructor
 @RequestMapping("${controller.prefix}/${controller.system.prefix}/dict")
+@Api(value = "dict", tags = "字典管理")
 public class DictController {
-    private final DictService service;
+    private final DictService sysDictService;
+    private final DictItemService sysDictItemService;
 
     /**
-     * 查询字典
+     * 通过ID查询字典信息
      *
-     * @param req
-     * @param dict
-     * @param rep
-     * @return
+     * @param id ID
+     * @return 字典信息
      */
-    @RequestMapping("/list")
-    public R<List<Dict>> list(Dict dict, Integer page, Integer limit, HttpServletRequest req, HttpServletResponse rep) {
-        PageInfo<Dict> byPage = service.findByPage(dict, page, limit);
-        return R.ok(byPage.getList());//.put("count", byPage.getTotal());
+    @GetMapping("/{id}")
+    public R getById(@PathVariable Integer id) {
+        return R.ok(sysDictService.getById(id));
     }
 
     /**
-     * 查询字典
+     * 分页查询字典信息
      *
-     * @param req
-     * @param dict
-     * @param rep
-     * @return
+     * @param page 分页对象
+     * @return 分页对象
      */
-    @RequestMapping("/findAll")
-    public R<List<Dict>> findAll(HttpServletRequest req, Dict dict, HttpServletResponse rep) {
-        List<Dict> list = service.findAll(dict);
-        return R.ok(list);
+    @GetMapping("/page")
+    public R<IPage> getDictPage(Page page, Dict dict) {
+        return R.ok(sysDictService.page(page, Wrappers.query(dict)));
     }
 
     /**
-     * 保存字典
+     * 通过字典类型查找字典
      *
-     * @param req
-     * @param dict
-     * @param rep
-     * @return
+     * @param type 类型
+     * @return 同类型字典
      */
-    @SysLog("编辑字典")
-    @PostMapping("save")
-    @Permission("sys:dict:edit")
-    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-    public R save(@RequestBody Dict dict, HttpServletRequest req, HttpServletResponse rep) {
-        User user = SecurityUtils.getUser();
-        service.save(dict, user);
-        return R.ok().setMsg("编辑字典成功");
+    @GetMapping("/type/{type}")
+    public R getDictByType(@PathVariable String type) {
+
+        return R.ok(sysDictItemService.list(Wrappers
+                .<DictItem>query().lambda()
+                .eq(DictItem::getType, type)));
     }
 
 
     /**
-     * 删除字典
+     * 添加字典
      *
-     * @param request
-     * @param dict
-     * @param response
-     * @return
+     * @param dict 字典信息
+     * @return success、false
+     */
+    @SysLog("添加字典")
+    @PostMapping
+    @PreAuthorize("@pms.hasPermission('sys_dict_add')")
+    public R save(@Valid @RequestBody Dict dict) {
+        return R.ok(sysDictService.save(dict));
+    }
+
+    /**
+     * 删除字典，并且清除字典缓存
+     *
+     * @param id ID
+     * @return R
      */
     @SysLog("删除字典")
-    @RequestMapping(value = "delete")
-    @Permission("sys:dict:edit")
-    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-    public R delete(HttpServletRequest request, Dict dict, HttpServletResponse response) {
-        service.delete(dict);
-        return R.ok().setMsg("删除字典成功");
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@pms.hasPermission('sys_dict_del')")
+    public R removeById(@PathVariable Integer id) {
+        return sysDictService.removeDict(id);
     }
 
     /**
-     * 获得type的字典列表
+     * 修改字典
      *
-     * @param dict
-     * @param request
-     * @param response
+     * @param dict 字典信息
+     * @return success/false
      */
-    @RequestMapping(value = "getDictByType")
-    public R<List<Dict>> getDictByType(HttpServletRequest request, Dict dict, HttpServletResponse response) {
-        List<Dict> list = new ArrayList();
-        if (StringUtils.isNotBlank(dict.getType())) {
-            list = service.findAll(dict);
-        }
-        return R.ok(list);
+    @PutMapping
+    @SysLog("修改字典")
+    @PreAuthorize("@pms.hasPermission('sys_dict_edit')")
+    public R updateById(@Valid @RequestBody Dict dict) {
+        return sysDictService.updateDict(dict);
     }
 
     /**
-     * 根据类型获取字典信息
+     * 分页查询
+     *
+     * @param page        分页对象
+     * @param dictItem 字典项
+     * @return
      */
-    @GetMapping(value = "getByTypeDict")
-    @ValidateGroup(fileds = {
-            @ValidateFiled(index = 0, notNull = true, filedName = "type", msg = "缺少type参数！")
-    })
-    public R<Dict> getByTypeDic(Dict dict, HttpServletRequest request, HttpServletResponse response) {
-        Dict dict1 = service.getDict(dict);
-        return R.ok(dict1).setMsg("获取字典信息成功!");
+    @GetMapping("/item/page")
+    public R getSysDictItemPage(Page page, DictItem dictItem) {
+        return R.ok(sysDictItemService.page(page, Wrappers.query(dictItem)));
     }
 
+
+    /**
+     * 通过id查询字典项
+     *
+     * @param id id
+     * @return R
+     */
+    @GetMapping("/item/{id}")
+    public R getDictItemById(@PathVariable("id") Integer id) {
+        return R.ok(sysDictItemService.getById(id));
+    }
+
+    /**
+     * 新增字典项
+     *
+     * @param dictItem 字典项
+     * @return R
+     */
+    @SysLog("新增字典项")
+    @PostMapping("/item")
+    public R save(@RequestBody DictItem dictItem) {
+        return R.ok(sysDictItemService.save(dictItem));
+    }
+
+    /**
+     * 修改字典项
+     *
+     * @param dictItem 字典项
+     * @return R
+     */
+    @SysLog("修改字典项")
+    @PutMapping("/item")
+    public R updateById(@RequestBody DictItem dictItem) {
+        return sysDictItemService.updateDictItem(dictItem);
+    }
+
+    /**
+     * 通过id删除字典项
+     *
+     * @param id id
+     * @return R
+     */
+    @SysLog("删除字典项")
+    @DeleteMapping("/item/{id}")
+    public R removeDictItemById(@PathVariable Integer id) {
+        return sysDictItemService.removeDictItem(id);
+    }
 }

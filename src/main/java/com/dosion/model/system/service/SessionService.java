@@ -1,8 +1,8 @@
 package com.dosion.model.system.service;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.dosion.constant.CacheConstants;
-import com.github.pagehelper.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,7 +34,7 @@ public class SessionService<T> {
     public T getSession(HttpServletRequest request) {
         try {
             String token = request.getHeader("token");
-            if (StringUtil.isEmpty(token)) {
+            if (StrUtil.isEmpty(token)) {
                 log.info("未获取到token");
                 return null;
             }
